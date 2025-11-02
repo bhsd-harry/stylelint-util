@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
 import {rules as recommended} from 'stylelint-config-recommended';
 import type {PublicApi, Warning, Config} from 'stylelint';
 
