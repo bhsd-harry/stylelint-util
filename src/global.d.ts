@@ -1,3 +1,4 @@
 declare module 'stylelint-config-recommended' {
-	const rules: Record<string, unknown>;
+	const config: {rules: Record<string, unknown>};
+	export default config;
 }

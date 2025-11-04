@@ -1,4 +1,4 @@
-import {rules as recommended} from 'stylelint-config-recommended';
+import recommended from 'stylelint-config-recommended';
 import type {PublicApi, Warning, Config} from 'stylelint';
 
 /**
@@ -35,7 +35,7 @@ export async function styleLint(
 				&& additionalConfig.extends.includes('stylelint-config-recommended')
 			)
 			? additionalRules ?? {}
-			: {...recommended, ...additionalRules},
+			: {...recommended.rules, ...additionalRules},
 		config: Config = {
 			rules,
 			computeEditInfo: true,
@@ -48,5 +48,18 @@ export async function styleLint(
 		return (await stylelint.lint({code, config})).code!;
 	}
 	const [result] = (await stylelint.lint({code, config})).results;
-	return result!.warnings.filter(({text}) => !text.startsWith('Unknown rule '));
+	return [
+		...result!.warnings.filter(({text}) => !text.startsWith('Unknown rule ')),
+		...result!.invalidOptionWarnings.map(({text}): Warning => {
+			const rule = / rule "([^"]+)"/u.exec(text)![1]!;
+			return {
+				line: 1,
+				column: 1,
+				rule,
+				severity: 'warning',
+				text,
+				stylelintType: 'invalidOption',
+			};
+		}),
+	];
 }
