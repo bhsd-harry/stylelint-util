@@ -1,5 +1,12 @@
 import recommended from 'stylelint-config-recommended';
-import type {PublicApi, Warning, Config} from 'stylelint';
+import type {PublicApi, Warning, Config, LintResult} from 'stylelint';
+
+const isEqualError = (a: LintResult['parseErrors'][0], b: LintResult['parseErrors'][0]): boolean =>
+	a.line === b.line
+	&& a.column === b.column
+	&& a.endLine === b.endLine
+	&& a.endColumn === b.endColumn
+	&& a.text === b.text;
 
 /**
  * 使用Stylelint检查CSS代码
@@ -50,6 +57,23 @@ export async function styleLint(
 	const [result] = (await stylelint.lint({code, config})).results;
 	return [
 		...result!.warnings.filter(({text}) => !text.startsWith('Unknown rule ')),
+		...result!.parseErrors
+			.reduce<LintResult['parseErrors']>((acc, cur) => { // eslint-disable-line unicorn/no-array-reduce
+				if (!acc.some(err => isEqualError(err, cur))) {
+					acc.push(cur);
+				}
+				return acc;
+			}, [])
+			.map(({line, column, endLine, endColumn, text}): Warning => ({
+				line,
+				column,
+				...endLine && {endLine},
+				...endColumn && {endColumn},
+				rule: 'parseError',
+				severity: 'warning',
+				text,
+				stylelintType: 'parseError',
+			})),
 		...result!.invalidOptionWarnings.map(({text}): Warning => {
 			const rule = / rule "([^"]+)"/u.exec(text)![1]!;
 			return {
