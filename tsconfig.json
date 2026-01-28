@@ -7,6 +7,7 @@
 		"module": "NodeNext",
 		"declaration": true,
 		"emitDeclarationOnly": true,
+		"rootDir": "src",
 		"outDir": "dist",
 		"alwaysStrict": true,
 		"exactOptionalPropertyTypes": true,
