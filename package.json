@@ -17,7 +17,7 @@
 	"scripts": {
 		"ls": "npm i --package-lock-only && npm ls --package-lock-only --all --omit=dev",
 		"prepublishOnly": "npm run build",
-		"build": "tsc && esbuild src/index.ts --charset=utf8 --target=es2024 --format=esm --outfile=dist/index.js",
+		"build": "tsc",
 		"lint:ts": "tsc --noEmit && eslint --cache .",
 		"lint": "npm run lint:ts"
 	},
@@ -25,10 +25,9 @@
 		"stylelint-config-recommended": "*"
 	},
 	"devDependencies": {
-		"@bhsd/code-standard": "^2.6.2",
-		"esbuild": "^0.28.0",
-		"eslint": "^10.4.1",
-		"stylelint": "^17.12.0",
+		"@bhsd/code-standard": "^3.0.0",
+		"eslint": "^10.5.0",
+		"stylelint": "^17.13.0",
 		"stylelint-config-recommended": "^18.0.0",
 		"typescript": "^6.0.3"
 	},
