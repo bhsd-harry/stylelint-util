@@ -18,8 +18,7 @@ const isEqualError = (a: LintResult['parseErrors'][0], b: LintResult['parseError
 export function styleLint(
 	stylelint: PublicApi,
 	code: string,
-	additionalConfig?: Config | Config['rules'] | null,
-	// @ts-expect-error required parameter
+	additionalConfig: Config | Config['rules'] | null | undefined,
 	fix: true,
 ): Promise<string>;
 export function styleLint(
@@ -58,7 +57,7 @@ export async function styleLint(
 	return [
 		...result!.warnings.filter(({text}) => !text.startsWith('Unknown rule ')),
 		...result!.parseErrors
-			.reduce<LintResult['parseErrors']>((acc, cur) => { // eslint-disable-line unicorn/no-array-reduce
+			.reduce<LintResult['parseErrors']>((acc, cur) => { // oxlint-disable-line unicorn/no-array-reduce
 				if (!acc.some(err => isEqualError(err, cur))) {
 					acc.push(cur);
 				}

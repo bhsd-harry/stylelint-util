@@ -1,6 +1,8 @@
-import config, {browser} from '@bhsd/code-standard';
+import config, {browser, getOxlintConfig} from '@bhsd/code-standard';
 
-export default [
+const oxlintConfig = getOxlintConfig([
 	...config,
 	browser,
-];
+]);
+
+export default oxlintConfig;
